@@ -211,7 +211,7 @@
                     </div>
 
                     <div class="form-section">
-                        <h3>المزامنة المحلية</h3>
+                        <h3>المزامنة السحابية</h3>
                         <div class="form-group">
                             <label>حالة المزامنة</label>
                             <div id="cloudSyncStatus" class="status-offline">
@@ -222,8 +222,8 @@
                             <button id="cloudSyncToggle" class="btn btn-secondary" onclick="toggleCloudSync()">
                                 تفعيل المزامنة
                             </button>
-                            <small class="form-text">تفعيل المزامنة المحلية يسمح بمشاركة التغييرات مع جميع التبويبات
-                                المفتوحة</small>
+                            <small class="form-text">تفعيل المزامنة السحابية يسمح بمشاركة التغييرات مع جميع الأجهزة عبر
+                                الإنترنت</small>
                         </div>
                     </div>
 
@@ -308,7 +308,7 @@
     <input type="file" id="backupFileInput" accept=".json" style="display: none;">
 
     <link rel="stylesheet" href="security.css">
-    <script src="local-sync.js"></script>
+    <script src="simple-db-sync.js"></script>
     <script src="admin-minimal-security.js"></script>
     <script src="admin-script.js"></script>
 </body>
