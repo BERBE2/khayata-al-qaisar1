@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Iraqi flag colors -->
+    <linearGradient id="iraqiRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#CE1126;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="iraqiWhite" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F8F9FA;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="iraqiBlack" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#333333;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Robot body gradient -->
+    <linearGradient id="robotBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8E8E8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#D0D0D0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8B8B8;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Eye glow -->
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#00FF00;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#00CC00;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#009900;stop-opacity:0.3" />
+    </radialGradient>
+    
+    <!-- Shadow -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Robot body -->
+  <rect x="60" y="80" width="80" height="100" rx="15" fill="url(#robotBody)" filter="url(#shadow)"/>
+  
+  <!-- Robot head -->
+  <circle cx="100" cy="70" r="35" fill="url(#robotBody)" filter="url(#shadow)"/>
+  
+  <!-- Iraqi flag bandana -->
+  <rect x="65" y="35" width="70" height="15" rx="7" fill="url(#iraqiRed)"/>
+  <rect x="65" y="50" width="70" height="15" rx="7" fill="url(#iraqiWhite)"/>
+  <rect x="65" y="65" width="70" height="15" rx="7" fill="url(#iraqiBlack)"/>
+  
+  <!-- Eyes -->
+  <circle cx="90" cy="65" r="8" fill="url(#eyeGlow)"/>
+  <circle cx="110" cy="65" r="8" fill="url(#eyeGlow)"/>
+  
+  <!-- Eye pupils -->
+  <circle cx="90" cy="65" r="4" fill="#000000"/>
+  <circle cx="110" cy="65" r="4" fill="#000000"/>
+  
+  <!-- Eye highlights -->
+  <circle cx="92" cy="63" r="2" fill="#FFFFFF"/>
+  <circle cx="112" cy="63" r="2" fill="#FFFFFF"/>
+  
+  <!-- Mouth -->
+  <rect x="85" y="75" width="30" height="4" rx="2" fill="#666666"/>
+  
+  <!-- Antenna -->
+  <line x1="100" y1="35" x2="100" y2="20" stroke="#666666" stroke-width="3"/>
+  <circle cx="100" cy="18" r="4" fill="#FFD700"/>
+  
+  <!-- Antenna glow -->
+  <circle cx="100" cy="18" r="6" fill="#FFD700" opacity="0.3"/>
+  
+  <!-- Arms -->
+  <rect x="40" y="90" width="20" height="60" rx="10" fill="url(#robotBody)" filter="url(#shadow)"/>
+  <rect x="140" y="90" width="20" height="60" rx="10" fill="url(#robotBody)" filter="url(#shadow)"/>
+  
+  <!-- Hands -->
+  <circle cx="50" cy="150" r="8" fill="url(#robotBody)"/>
+  <circle cx="150" cy="150" r="8" fill="url(#robotBody)"/>
+  
+  <!-- Legs -->
+  <rect x="75" y="180" width="20" height="15" rx="10" fill="url(#robotBody)" filter="url(#shadow)"/>
+  <rect x="105" y="180" width="20" height="15" rx="10" fill="url(#robotBody)" filter="url(#shadow)"/>
+  
+  <!-- Chest panel -->
+  <rect x="75" y="100" width="50" height="30" rx="5" fill="#4A90E2" opacity="0.7"/>
+  
+  <!-- Chest buttons -->
+  <circle cx="85" cy="110" r="3" fill="#FF6B6B"/>
+  <circle cx="100" cy="110" r="3" fill="#4CAF50"/>
+  <circle cx="115" cy="110" r="3" fill="#FF9800"/>
+  
+  <!-- Chest display -->
+  <rect x="80" y="120" width="40" height="8" rx="4" fill="#000000" opacity="0.8"/>
+  
+  <!-- Friendly smile -->
+  <path d="M 85 75 Q 100 80 115 75" stroke="#666666" stroke-width="2" fill="none"/>
+  
+  <!-- Sparkle effects -->
+  <g opacity="0.7">
+    <path d="M 30 40 L 35 45 L 30 50 L 25 45 Z" fill="#FFD700"/>
+    <path d="M 170 60 L 175 65 L 170 70 L 165 65 Z" fill="#FFD700"/>
+    <path d="M 50 20 L 55 25 L 50 30 L 45 25 Z" fill="#FFD700"/>
+    <path d="M 150 30 L 155 35 L 150 40 L 145 35 Z" fill="#FFD700"/>
+  </g>
+  
+  <!-- Heart symbol on chest -->
+  <path d="M 100 125 Q 95 120 90 125 Q 90 130 100 135 Q 110 130 110 125 Q 105 120 100 125" fill="#FF6B6B" opacity="0.8"/>
+</svg>

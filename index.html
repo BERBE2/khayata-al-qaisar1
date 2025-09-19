@@ -16,8 +16,13 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="logo">
-                    <h1>خياطة القيصر</h1>
-                    <p>خياطة فاخرة ومميزة</p>
+                    <div class="logo-image">
+                        <img src="logo.svg" alt="خياطة القيصر" class="logo-svg">
+                    </div>
+                    <div class="logo-text">
+                        <h1>خياطة القيصر</h1>
+                        <p>خياطة فاخرة ومميزة</p>
+                    </div>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html" class="nav-link active">الرئيسية</a></li>
@@ -114,6 +119,55 @@
         </div>
     </section>
 
+    <!-- Gallery Preview -->
+    <section class="gallery-preview">
+        <div class="container">
+            <h2 class="section-title">معرض أعمالنا</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>بدلة رسمية أنيقة</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>فستان سهرة</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>قميص مخصص</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>عباءة فاخرة</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>معطف شتوي</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>تنورة أنيقة</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-actions">
+                <a href="men.html" class="btn btn-primary">عرض معرض الرجال</a>
+                <a href="women.html" class="btn btn-secondary">عرض معرض النساء</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
@@ -183,6 +237,12 @@
         </div>
     </footer>
 
+    <link rel="stylesheet" href="image-viewer.css">
+    <link rel="stylesheet" href="robot.css">
+    <script src="minimal-security.js"></script>
+    <script src="data-sync.js"></script>
+    <script src="image-viewer.js"></script>
+    <script src="robot.js"></script>
     <script src="script.js"></script>
 </body>
 

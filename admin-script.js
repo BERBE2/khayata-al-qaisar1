@@ -95,12 +95,26 @@ function handleLogin(e) {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    if (username === defaultCredentials.username && password === defaultCredentials.password) {
-        currentUser = { username, password };
-        showAdminDashboard();
-        showMessage('تم تسجيل الدخول بنجاح!', 'success');
+    // Use minimal security system for validation
+    if (window.minimalSecuritySystem) {
+        const result = window.minimalSecuritySystem.validateCredentials(username, password);
+
+        if (result.success) {
+            currentUser = { username, password };
+            showAdminDashboard();
+            showMessage(result.message, 'success');
+        } else {
+            showMessage(result.message, 'error');
+        }
     } else {
-        showMessage('اسم المستخدم أو كلمة المرور غير صحيحة!', 'error');
+        // Fallback to original login
+        if (username === defaultCredentials.username && password === defaultCredentials.password) {
+            currentUser = { username, password };
+            showAdminDashboard();
+            showMessage('تم تسجيل الدخول بنجاح!', 'success');
+        } else {
+            showMessage('اسم المستخدم أو كلمة المرور غير صحيحة!', 'error');
+        }
     }
 }
 
@@ -242,6 +256,21 @@ function saveImage() {
         updateStats();
         closeModal();
         showMessage('تم حفظ الصورة بنجاح!', 'success');
+
+        // Trigger update for main site
+        setTimeout(() => {
+            if (window.TailoringData) {
+                window.TailoringData.menImages = menImages;
+                window.TailoringData.womenImages = womenImages;
+                window.dispatchEvent(new CustomEvent('tailoringDataUpdated', {
+                    detail: {
+                        menImages: menImages,
+                        womenImages: womenImages,
+                        siteSettings: siteSettings
+                    }
+                }));
+            }
+        }, 100);
     };
     reader.readAsDataURL(file);
 }
@@ -382,7 +411,56 @@ function saveSettings() {
     }
 
     saveData();
+
+    // Update main site settings
+    updateMainSiteSettings();
+
     showMessage('تم حفظ الإعدادات بنجاح!', 'success');
+}
+
+function updateMainSiteSettings() {
+    // Update contact info in main site
+    const phoneElements = document.querySelectorAll('a[href^="tel:"]');
+    const whatsappElements = document.querySelectorAll('a[href*="wa.me"]');
+    const addressElements = document.querySelectorAll('.contact-details p');
+
+    // Update phone links
+    phoneElements.forEach(el => {
+        el.href = `tel:${siteSettings.phoneNumber}`;
+        el.textContent = siteSettings.phoneNumber;
+    });
+
+    // Update whatsapp links
+    whatsappElements.forEach(el => {
+        el.href = `https://wa.me/${siteSettings.whatsappNumber.replace('+', '')}`;
+    });
+
+    // Update address
+    addressElements.forEach(el => {
+        if (el.textContent.includes('حي الأندلس') || el.textContent.includes('مول')) {
+            el.textContent = siteSettings.address;
+        }
+    });
+
+    // Update map link
+    const mapLinks = document.querySelectorAll('a[href*="maps.google"]');
+    mapLinks.forEach(el => {
+        el.href = siteSettings.mapLink;
+    });
+
+    // Trigger update for other tabs
+    setTimeout(() => {
+        if (window.TailoringData) {
+            window.TailoringData.siteSettings = siteSettings;
+            window.dispatchEvent(new CustomEvent('tailoringDataUpdated', {
+                detail: {
+                    menImages: menImages,
+                    womenImages: womenImages,
+                    siteSettings: siteSettings
+                }
+            }));
+        }
+    }, 100);
 }
 
 function resetSettings() {
@@ -418,6 +496,27 @@ function saveData() {
     };
 
     localStorage.setItem('tailoringData', JSON.stringify(data));
+
+    // Update global data object if available
+    if (window.TailoringData) {
+        window.TailoringData.menImages = menImages;
+        window.TailoringData.womenImages = womenImages;
+        window.TailoringData.siteSettings = siteSettings;
+    }
+
+    // Trigger custom event
+    window.dispatchEvent(new CustomEvent('tailoringDataUpdated', {
+        detail: data
+    }));
+
+    // Trigger storage event for other tabs
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: 'tailoringData',
+        newValue: JSON.stringify(data),
+        url: window.location.href
+    }));
+
+    console.log('Data saved successfully:', data);
 }
 
 function loadData() {
@@ -529,3 +628,6 @@ window.openImageModal = openImageModal;
 window.editImage = editImage;
 window.deleteImage = deleteImage;
 window.exportDataForWebsite = exportDataForWebsite;
+
+// Security Functions (Simplified)
+// All complex security functions removed to prevent issues

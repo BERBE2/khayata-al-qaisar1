@@ -256,43 +256,39 @@ window.addEventListener('scroll', debouncedScrollHandler);
 // Load images from admin panel
 function loadGalleryImages() {
     const savedData = localStorage.getItem('tailoringData');
+    console.log('Loading gallery images...', savedData);
+
     if (savedData) {
         try {
             const data = JSON.parse(savedData);
+            console.log('Parsed data:', data);
             updateGalleryImages(data.menImages, data.womenImages);
         } catch (e) {
             console.error('Error loading gallery images:', e);
         }
+    } else {
+        console.log('No saved data found');
     }
 }
 
 function updateGalleryImages(menImages, womenImages) {
-    // Update men's gallery
-    const menGalleryItems = document.querySelectorAll('#menImagesGrid .gallery-item, .men-services .gallery-item');
-    menGalleryItems.forEach((item, index) => {
-        if (menImages && menImages[index]) {
-            const image = menImages[index];
-            const placeholder = item.querySelector('.gallery-placeholder');
-            if (placeholder) {
-                placeholder.innerHTML = `
-                    <img src="${image.image}" alt="${image.title}" style="width: 100%; height: 100%; object-fit: cover;">
-                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 10px;">
-                        <h4 style="margin: 0; font-size: 1rem;">${image.title}</h4>
-                        ${image.price ? `<p style="margin: 5px 0 0 0; font-size: 0.9rem;">${image.price}</p>` : ''}
-                    </div>
-                `;
-                placeholder.style.position = 'relative';
-            }
-        }
-    });
+    console.log('Updating gallery images:', { menImages, womenImages });
 
-    // Update women's gallery
-    const womenGalleryItems = document.querySelectorAll('#womenImagesGrid .gallery-item, .women-services .gallery-item');
-    womenGalleryItems.forEach((item, index) => {
-        if (womenImages && womenImages[index]) {
-            const image = womenImages[index];
-            const placeholder = item.querySelector('.gallery-placeholder');
-            if (placeholder) {
+    // Ensure arrays are defined
+    menImages = menImages || [];
+    womenImages = womenImages || [];
+
+    // Update all gallery items
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    console.log('Found gallery items:', galleryItems.length);
+
+    galleryItems.forEach((item, index) => {
+        const placeholder = item.querySelector('.gallery-placeholder');
+        if (placeholder) {
+            // Try men images first, then women images
+            let image = menImages[index] || womenImages[index];
+
+            if (image) {
                 placeholder.innerHTML = `
                     <img src="${image.image}" alt="${image.title}" style="width: 100%; height: 100%; object-fit: cover;">
                     <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 10px;">
@@ -301,6 +297,16 @@ function updateGalleryImages(menImages, womenImages) {
                     </div>
                 `;
                 placeholder.style.position = 'relative';
+
+                // Add click event to show image details
+                item.addEventListener('click', () => {
+                    if (window.showImageDetails) {
+                        const allImages = [...menImages, ...womenImages];
+                        window.showImageDetails(image, allImages);
+                    }
+                });
+
+                console.log('Updated image:', image.title);
             }
         }
     });
@@ -308,5 +314,178 @@ function updateGalleryImages(menImages, womenImages) {
 
 // Load gallery images on page load
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, loading gallery images...');
     loadGalleryImages();
+
+    // Initialize enhanced features
+    initializeScrollAnimations();
+    initializeHeaderEffects();
+    initializeLoadingStates();
+    initializeLogoEffects();
 });
+
+// Scroll animations
+function initializeScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+            }
+        });
+    }, observerOptions);
+
+    // Add scroll animation to elements
+    document.querySelectorAll('.feature-card, .service-card, .contact-item, .gallery-item').forEach(el => {
+        el.classList.add('scroll-animate');
+        observer.observe(el);
+    });
+}
+
+// Header scroll effects
+function initializeHeaderEffects() {
+    const header = document.querySelector('.header');
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+
+        lastScrollY = currentScrollY;
+    });
+}
+
+// Loading states for images
+function initializeLoadingStates() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.addEventListener('load', () => {
+            img.classList.remove('loading');
+        });
+
+        if (!img.complete) {
+            img.classList.add('loading');
+        }
+    });
+}
+
+// Logo animations
+function initializeLogoEffects() {
+    const logo = document.querySelector('.logo');
+    const logoSvg = document.querySelector('.logo-svg');
+
+    if (logo && logoSvg) {
+        // Add pulse animation on page load
+        setTimeout(() => {
+            logoSvg.style.animation = 'pulse 2s ease-in-out';
+        }, 1000);
+
+        // Add hover effects
+        logo.addEventListener('mouseenter', () => {
+            logoSvg.style.filter = 'drop-shadow(0 8px 16px var(--shadow-gold)) brightness(1.1)';
+        });
+
+        logo.addEventListener('mouseleave', () => {
+            logoSvg.style.filter = 'drop-shadow(0 4px 8px var(--shadow-gold)) brightness(1)';
+        });
+
+        // Add click effect
+        logo.addEventListener('click', () => {
+            logoSvg.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                logoSvg.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    logoSvg.style.transform = 'scale(1)';
+                }, 150);
+            }, 100);
+        });
+    }
+}
+
+// Listen for storage changes (when admin panel updates data)
+window.addEventListener('storage', function (e) {
+    if (e.key === 'tailoringData') {
+        console.log('Storage changed, reloading images...');
+        loadGalleryImages();
+    }
+});
+
+// Listen for custom data updates
+window.addEventListener('tailoringDataUpdated', function (e) {
+    console.log('Custom data update received:', e.detail);
+    if (e.detail && e.detail.menImages && e.detail.womenImages) {
+        updateGalleryImages(e.detail.menImages, e.detail.womenImages);
+    }
+    if (e.detail && e.detail.siteSettings) {
+        updateSiteSettings(e.detail.siteSettings);
+    }
+});
+
+function updateSiteSettings(settings) {
+    if (!settings) return;
+
+    console.log('Updating site settings:', settings);
+
+    // Update phone numbers
+    const phoneElements = document.querySelectorAll('a[href^="tel:"]');
+    phoneElements.forEach(el => {
+        el.href = `tel:${settings.phoneNumber}`;
+        const phoneText = el.querySelector('p') || el;
+        if (phoneText.textContent.includes('+') || phoneText.textContent.includes('077')) {
+            phoneText.textContent = settings.phoneNumber;
+        }
+    });
+
+    // Update whatsapp links
+    const whatsappElements = document.querySelectorAll('a[href*="wa.me"]');
+    whatsappElements.forEach(el => {
+        el.href = `https://wa.me/${settings.whatsappNumber.replace('+', '')}`;
+        const whatsappText = el.querySelector('p') || el;
+        if (whatsappText.textContent.includes('+') || whatsappText.textContent.includes('077')) {
+            whatsappText.textContent = settings.whatsappNumber;
+        }
+    });
+
+    // Update address
+    const addressElements = document.querySelectorAll('.contact-details p');
+    addressElements.forEach(el => {
+        if (el.textContent.includes('حي الأندلس') || el.textContent.includes('مول') || el.textContent.includes('العنوان')) {
+            el.textContent = settings.address;
+        }
+    });
+
+    // Update map links
+    const mapLinks = document.querySelectorAll('a[href*="maps.google"]');
+    mapLinks.forEach(el => {
+        el.href = settings.mapLink;
+    });
+
+    console.log('Site settings updated successfully');
+}
+
+// Also check for changes every 2 seconds (fallback)
+setInterval(() => {
+    loadGalleryImages();
+    // Also check for settings updates
+    const savedData = localStorage.getItem('tailoringData');
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            if (data.siteSettings) {
+                updateSiteSettings(data.siteSettings);
+            }
+        } catch (e) {
+            console.error('Error loading settings:', e);
+        }
+    }
+}, 2000);
+
