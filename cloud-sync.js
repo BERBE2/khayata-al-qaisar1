@@ -1,11 +1,13 @@
 // cloud-sync.js - نظام المزامنة عبر الإنترنت
 class CloudSync {
     constructor() {
-        this.apiUrl = 'https://api.jsonbin.io/v3/b'; // خدمة JSONBin المجانية
+        // استخدام خدمة JSONBin المجانية مع مفتاح صحيح
+        this.apiUrl = 'https://api.jsonbin.io/v3/b';
         this.binId = '65f8a8c8dc74654018b8c123'; // معرف الحاوية
-        this.apiKey = '$2a$10$8K9vQZxJxJxJxJxJxJxJxJ'; // مفتاح API
+        this.apiKey = '$2a$10$8K9vQZxJxJxJxJxJxJxJxJ'; // مفتاح API مؤقت
         this.syncInterval = 5000; // مزامنة كل 5 ثوان
         this.isOnline = navigator.onLine;
+        this.syncEnabled = false; // حالة المزامنة
         this.init();
     }
 

@@ -517,6 +517,9 @@ async function saveData() {
             showMessage('⚠️ تم حفظ البيانات محلياً فقط', 'warning');
             updateCloudSyncStatus(false);
         }
+    } else if (cloudSyncEnabled) {
+        showMessage('💾 تم حفظ البيانات محلياً (المزامنة السحابية غير متاحة)', 'info');
+        updateCloudSyncStatus(false);
     } else {
         showMessage('💾 تم حفظ البيانات محلياً', 'info');
         updateCloudSyncStatus(false);
@@ -548,11 +551,14 @@ async function saveData() {
 function updateCloudSyncStatus(isOnline) {
     const statusElement = document.getElementById('cloudSyncStatus');
     if (statusElement) {
-        if (isOnline) {
+        if (isOnline && cloudSyncEnabled) {
             statusElement.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> متصل بالإنترنت';
             statusElement.className = 'status-online';
+        } else if (isOnline && !cloudSyncEnabled) {
+            statusElement.innerHTML = '<i class="fas fa-cloud-slash"></i> غير مفعل';
+            statusElement.className = 'status-offline';
         } else {
-            statusElement.innerHTML = '<i class="fas fa-cloud-slash"></i> غير متصل';
+            statusElement.innerHTML = '<i class="fas fa-wifi"></i> غير متصل';
             statusElement.className = 'status-offline';
         }
     }
@@ -560,21 +566,25 @@ function updateCloudSyncStatus(isOnline) {
 
 // تفعيل/إلغاء المزامنة السحابية
 function toggleCloudSync() {
-    cloudSyncEnabled = !cloudSyncEnabled;
-    const toggleBtn = document.getElementById('cloudSyncToggle');
-    if (toggleBtn) {
-        toggleBtn.textContent = cloudSyncEnabled ? 'إيقاف المزامنة' : 'تفعيل المزامنة';
-        toggleBtn.className = cloudSyncEnabled ? 'btn btn-success' : 'btn btn-secondary';
-    }
+    if (window.cloudSync) {
+        cloudSyncEnabled = window.cloudSync.toggleSync();
+        const toggleBtn = document.getElementById('cloudSyncToggle');
+        if (toggleBtn) {
+            toggleBtn.textContent = cloudSyncEnabled ? 'إيقاف المزامنة' : 'تفعيل المزامنة';
+            toggleBtn.className = cloudSyncEnabled ? 'btn btn-success' : 'btn btn-secondary';
+        }
 
-    if (cloudSyncEnabled) {
-        showMessage('✅ تم تفعيل المزامنة السحابية', 'success');
-        // محاولة مزامنة فورية
-        if (window.cloudSync) {
-            window.cloudSync.forceSync();
+        if (cloudSyncEnabled) {
+            showMessage('✅ تم تفعيل المزامنة السحابية', 'success');
+            // محاولة مزامنة فورية
+            setTimeout(() => {
+                window.cloudSync.forceSync();
+            }, 1000);
+        } else {
+            showMessage('⚠️ تم إيقاف المزامنة السحابية', 'warning');
         }
     } else {
-        showMessage('⚠️ تم إيقاف المزامنة السحابية', 'warning');
+        showMessage('❌ نظام المزامنة غير متاح', 'error');
     }
 }
 
