@@ -12,6 +12,9 @@ let siteSettings = {
     mapLink: 'https://maps.google.com'
 };
 
+// Cloud Sync Status
+let cloudSyncEnabled = false;
+
 // Default admin credentials
 const defaultCredentials = {
     username: 'admin',
@@ -486,7 +489,7 @@ function updateStats() {
 }
 
 // Data Management Functions
-function saveData() {
+async function saveData() {
     const data = {
         menImages: menImages,
         womenImages: womenImages,
@@ -495,7 +498,29 @@ function saveData() {
         lastUpdate: new Date().toISOString()
     };
 
+    // حفظ محلي
     localStorage.setItem('tailoringData', JSON.stringify(data));
+
+    // مزامنة سحابية
+    if (window.cloudSync && cloudSyncEnabled) {
+        try {
+            const syncResult = await window.cloudSync.forceSync();
+            if (syncResult) {
+                showMessage('✅ تم حفظ البيانات ومزامنتها عبر الإنترنت', 'success');
+                updateCloudSyncStatus(true);
+            } else {
+                showMessage('⚠️ تم حفظ البيانات محلياً فقط (لا يوجد اتصال)', 'warning');
+                updateCloudSyncStatus(false);
+            }
+        } catch (error) {
+            console.error('خطأ في المزامنة السحابية:', error);
+            showMessage('⚠️ تم حفظ البيانات محلياً فقط', 'warning');
+            updateCloudSyncStatus(false);
+        }
+    } else {
+        showMessage('💾 تم حفظ البيانات محلياً', 'info');
+        updateCloudSyncStatus(false);
+    }
 
     // Update global data object if available
     if (window.TailoringData) {
@@ -517,6 +542,40 @@ function saveData() {
     }));
 
     console.log('Data saved successfully:', data);
+}
+
+// تحديث حالة المزامنة السحابية
+function updateCloudSyncStatus(isOnline) {
+    const statusElement = document.getElementById('cloudSyncStatus');
+    if (statusElement) {
+        if (isOnline) {
+            statusElement.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> متصل بالإنترنت';
+            statusElement.className = 'status-online';
+        } else {
+            statusElement.innerHTML = '<i class="fas fa-cloud-slash"></i> غير متصل';
+            statusElement.className = 'status-offline';
+        }
+    }
+}
+
+// تفعيل/إلغاء المزامنة السحابية
+function toggleCloudSync() {
+    cloudSyncEnabled = !cloudSyncEnabled;
+    const toggleBtn = document.getElementById('cloudSyncToggle');
+    if (toggleBtn) {
+        toggleBtn.textContent = cloudSyncEnabled ? 'إيقاف المزامنة' : 'تفعيل المزامنة';
+        toggleBtn.className = cloudSyncEnabled ? 'btn btn-success' : 'btn btn-secondary';
+    }
+
+    if (cloudSyncEnabled) {
+        showMessage('✅ تم تفعيل المزامنة السحابية', 'success');
+        // محاولة مزامنة فورية
+        if (window.cloudSync) {
+            window.cloudSync.forceSync();
+        }
+    } else {
+        showMessage('⚠️ تم إيقاف المزامنة السحابية', 'warning');
+    }
 }
 
 function loadData() {

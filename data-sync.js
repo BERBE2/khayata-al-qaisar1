@@ -13,6 +13,20 @@ window.TailoringData = {
     }
 };
 
+// Cloud sync status
+let cloudSyncActive = false;
+
+// Check cloud sync status
+function checkCloudSync() {
+    if (window.cloudSync) {
+        cloudSyncActive = true;
+        console.log('✅ المزامنة السحابية متاحة');
+    } else {
+        cloudSyncActive = false;
+        console.log('⚠️ المزامنة السحابية غير متاحة');
+    }
+}
+
 // Load data from localStorage
 function loadTailoringData() {
     const savedData = localStorage.getItem('tailoringData');
@@ -162,6 +176,10 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Data sync script loaded');
     console.log('Current page:', window.location.pathname);
     console.log('Page type:', getCurrentPageType());
+
+    // Check cloud sync availability
+    setTimeout(checkCloudSync, 1000);
+
     loadTailoringData();
     updateGalleryImages();
     updateSiteSettings();
