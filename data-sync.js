@@ -27,20 +27,59 @@ function checkCloudSync() {
     }
 }
 
-// Load data from localStorage
-function loadTailoringData() {
-    const savedData = localStorage.getItem('tailoringData');
-    if (savedData) {
-        try {
-            const data = JSON.parse(savedData);
-            window.TailoringData = {
-                menImages: data.menImages || [],
-                womenImages: data.womenImages || [],
-                siteSettings: data.siteSettings || window.TailoringData.siteSettings
-            };
-            console.log('Data loaded successfully:', window.TailoringData);
-        } catch (e) {
-            console.error('Error loading data:', e);
+// جلب البيانات من السحابة
+async function fetchDataFromCloud() {
+    if (!window.cloudSync) {
+        console.log('⚠️ نظام المزامنة السحابية غير متاح');
+        return null;
+    }
+
+    try {
+        const cloudData = await window.cloudSync.fetchData();
+        if (cloudData) {
+            console.log('✅ تم جلب البيانات من السحابة:', cloudData);
+            return cloudData;
+        } else {
+            console.log('⚠️ لا توجد بيانات في السحابة');
+            return null;
+        }
+    } catch (error) {
+        console.error('❌ خطأ في جلب البيانات من السحابة:', error);
+        return null;
+    }
+}
+
+// Load data from localStorage and cloud
+async function loadTailoringData() {
+    // محاولة جلب البيانات من السحابة أولاً
+    const cloudData = await fetchDataFromCloud();
+
+    if (cloudData) {
+        // استخدام البيانات من السحابة
+        window.TailoringData = {
+            menImages: cloudData.menImages || [],
+            womenImages: cloudData.womenImages || [],
+            siteSettings: cloudData.siteSettings || window.TailoringData.siteSettings
+        };
+
+        // حفظ البيانات محلياً كنسخة احتياطية
+        localStorage.setItem('tailoringData', JSON.stringify(cloudData));
+        console.log('✅ تم تحميل البيانات من السحابة:', window.TailoringData);
+    } else {
+        // استخدام البيانات المحلية كاحتياطي
+        const savedData = localStorage.getItem('tailoringData');
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                window.TailoringData = {
+                    menImages: data.menImages || [],
+                    womenImages: data.womenImages || [],
+                    siteSettings: data.siteSettings || window.TailoringData.siteSettings
+                };
+                console.log('💾 تم تحميل البيانات المحلية:', window.TailoringData);
+            } catch (e) {
+                console.error('❌ خطأ في تحميل البيانات المحلية:', e);
+            }
         }
     }
 }
@@ -65,7 +104,21 @@ function saveTailoringData() {
 }
 
 // Update gallery images
-function updateGalleryImages() {
+async function updateGalleryImages() {
+    // محاولة جلب أحدث البيانات من السحابة
+    if (window.cloudSync) {
+        try {
+            const cloudData = await window.cloudSync.fetchData();
+            if (cloudData) {
+                window.TailoringData.menImages = cloudData.menImages || [];
+                window.TailoringData.womenImages = cloudData.womenImages || [];
+                console.log('✅ تم تحديث الصور من السحابة');
+            }
+        } catch (error) {
+            console.log('⚠️ استخدام الصور المحلية');
+        }
+    }
+
     const menImages = window.TailoringData.menImages || [];
     const womenImages = window.TailoringData.womenImages || [];
 
@@ -172,7 +225,7 @@ function updateWomenGallery(womenImages) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     console.log('Data sync script loaded');
     console.log('Current page:', window.location.pathname);
     console.log('Page type:', getCurrentPageType());
@@ -180,10 +233,32 @@ document.addEventListener('DOMContentLoaded', function () {
     // Check cloud sync availability
     setTimeout(checkCloudSync, 1000);
 
-    loadTailoringData();
+    // تحميل البيانات من السحابة أولاً
+    await loadTailoringData();
     updateGalleryImages();
     updateSiteSettings();
+
+    // بدء المزامنة التلقائية من السحابة
+    startCloudSync();
 });
+
+// بدء المزامنة التلقائية من السحابة
+function startCloudSync() {
+    // مزامنة فورية عند التحميل
+    setTimeout(async () => {
+        await loadTailoringData();
+        updateGalleryImages();
+        updateSiteSettings();
+    }, 3000);
+
+    // مزامنة دورية كل 10 ثوان
+    setInterval(async () => {
+        console.log('🔄 مزامنة تلقائية من السحابة...');
+        await loadTailoringData();
+        updateGalleryImages();
+        updateSiteSettings();
+    }, 10000);
+}
 
 // Listen for data updates
 window.addEventListener('tailoringDataUpdated', function (e) {
@@ -197,7 +272,20 @@ window.addEventListener('tailoringDataUpdated', function (e) {
     updateSiteSettings();
 });
 
-function updateSiteSettings() {
+async function updateSiteSettings() {
+    // محاولة جلب أحدث البيانات من السحابة
+    if (window.cloudSync) {
+        try {
+            const cloudData = await window.cloudSync.fetchData();
+            if (cloudData && cloudData.siteSettings) {
+                window.TailoringData.siteSettings = cloudData.siteSettings;
+                console.log('✅ تم تحديث الإعدادات من السحابة');
+            }
+        } catch (error) {
+            console.log('⚠️ استخدام الإعدادات المحلية');
+        }
+    }
+
     const settings = window.TailoringData.siteSettings;
     if (!settings) return;
 
