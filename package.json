@@ -1,0 +1,25 @@
+{
+    "name": "khayata-al-qaisar",
+    "version": "1.0.0",
+    "description": "موقع خياطة القيصر مع نظام MongoDB",
+    "main": "index.html",
+    "scripts": {
+        "dev": "vercel dev",
+        "build": "vercel build",
+        "deploy": "vercel --prod"
+    },
+    "dependencies": {
+        "mongodb": "^6.0.0"
+    },
+    "devDependencies": {
+        "@vercel/node": "^3.0.0"
+    },
+    "keywords": [
+        "tailoring",
+        "mongodb",
+        "vercel",
+        "website"
+    ],
+    "author": "خياطة القيصر",
+    "license": "MIT"
+}
