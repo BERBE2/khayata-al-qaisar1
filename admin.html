@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم خياطة القيصر</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>خياطة القيصر</h1>
+                <p>لوحة التحكم</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">اسم المستخدم</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">دخول</button>
+            </form>
+            <div class="login-info">
+                <p><strong>بيانات الدخول الافتراضية:</strong></p>
+                <p>اسم المستخدم: admin</p>
+                <p>كلمة المرور: admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>خياطة القيصر - لوحة التحكم</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="backupBtn" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> نسخ احتياطي
+                    </button>
+                    <button id="restoreBtn" class="btn btn-secondary">
+                        <i class="fas fa-upload"></i> استيراد
+                    </button>
+                    <button id="logoutBtn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> خروج
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-item active" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i> الرئيسية
+                        </a></li>
+                    <li><a href="#men-gallery" class="nav-item" data-section="men-gallery">
+                            <i class="fas fa-male"></i> معرض الرجال
+                        </a></li>
+                    <li><a href="#women-gallery" class="nav-item" data-section="women-gallery">
+                            <i class="fas fa-female"></i> معرض النساء
+                        </a></li>
+                    <li><a href="#settings" class="nav-item" data-section="settings">
+                            <i class="fas fa-cog"></i> الإعدادات
+                        </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2>لوحة التحكم الرئيسية</h2>
+                    <p>مرحباً بك في لوحة تحكم خياطة القيصر</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-male"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="menImagesCount">0</h3>
+                            <p>صور الرجال</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="womenImagesCount">0</h3>
+                            <p>صور النساء</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalImagesCount">0</h3>
+                            <p>إجمالي الصور</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="lastUpdate">-</h3>
+                            <p>آخر تحديث</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>إجراءات سريعة</h3>
+                    <div class="actions-grid">
+                        <a href="#men-gallery" class="action-card" data-section="men-gallery">
+                            <i class="fas fa-plus"></i>
+                            <h4>إضافة صورة رجال</h4>
+                            <p>أضف صورة جديدة لمعرض الرجال</p>
+                        </a>
+                        <a href="#women-gallery" class="action-card" data-section="women-gallery">
+                            <i class="fas fa-plus"></i>
+                            <h4>إضافة صورة نساء</h4>
+                            <p>أضف صورة جديدة لمعرض النساء</p>
+                        </a>
+                        <a href="index.html" target="_blank" class="action-card">
+                            <i class="fas fa-external-link-alt"></i>
+                            <h4>عرض الموقع</h4>
+                            <p>افتح الموقع الرئيسي في تبويب جديد</p>
+                        </a>
+                        <a href="#settings" class="action-card" data-section="settings">
+                            <i class="fas fa-cog"></i>
+                            <h4>الإعدادات</h4>
+                            <p>إدارة إعدادات الموقع</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Men Gallery Section -->
+            <section id="men-gallery" class="content-section">
+                <div class="section-header">
+                    <h2>إدارة معرض الرجال</h2>
+                    <button id="addMenImageBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> إضافة صورة جديدة
+                    </button>
+                </div>
+
+                <div id="menImagesGrid" class="images-grid">
+                    <!-- Images will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Women Gallery Section -->
+            <section id="women-gallery" class="content-section">
+                <div class="section-header">
+                    <h2>إدارة معرض النساء</h2>
+                    <button id="addWomenImageBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> إضافة صورة جديدة
+                    </button>
+                </div>
+
+                <div id="womenImagesGrid" class="images-grid">
+                    <!-- Images will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h2>إعدادات الموقع</h2>
+                    <p>إدارة معلومات الاتصال والإعدادات العامة</p>
+                </div>
+
+                <div class="settings-form">
+                    <div class="form-section">
+                        <h3>معلومات الاتصال</h3>
+                        <div class="form-group">
+                            <label for="phoneNumber">رقم الهاتف</label>
+                            <input type="text" id="phoneNumber" value="+07769592080">
+                        </div>
+                        <div class="form-group">
+                            <label for="whatsappNumber">رقم الواتساب</label>
+                            <input type="text" id="whatsappNumber" value="+07769592080">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">العنوان</label>
+                            <input type="text" id="address" value="حي الأندلس - قرب مودا مول">
+                        </div>
+                        <div class="form-group">
+                            <label for="mapLink">رابط الخريطة</label>
+                            <input type="url" id="mapLink" value="https://maps.google.com">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>إعدادات الأمان</h3>
+                        <div class="form-group">
+                            <label for="newUsername">اسم المستخدم الجديد</label>
+                            <input type="text" id="newUsername" placeholder="اسم المستخدم الحالي: admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">كلمة المرور الجديدة</label>
+                            <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">تأكيد كلمة المرور</label>
+                            <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="saveSettingsBtn" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ الإعدادات
+                        </button>
+                        <button id="resetSettingsBtn" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> إعادة تعيين
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">إضافة صورة جديدة</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="imageForm">
+                    <div class="form-group">
+                        <label for="imageFile">اختر الصورة</label>
+                        <input type="file" id="imageFile" accept="image/*" required>
+                        <div class="file-preview" id="filePreview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageTitle">عنوان الصورة</label>
+                        <input type="text" id="imageTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageDescription">وصف الصورة</label>
+                        <textarea id="imageDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageCategory">التصنيف</label>
+                        <select id="imageCategory">
+                            <option value="بدلة رسمية">بدلة رسمية</option>
+                            <option value="قميص">قميص</option>
+                            <option value="بنطلون">بنطلون</option>
+                            <option value="معطف">معطف</option>
+                            <option value="فستان">فستان</option>
+                            <option value="بلوزة">بلوزة</option>
+                            <option value="تنورة">تنورة</option>
+                            <option value="عباءة">عباءة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagePrice">السعر (اختياري)</label>
+                        <input type="text" id="imagePrice" placeholder="مثال: 150,000 دينار">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary modal-close">إلغاء</button>
+                <button type="button" id="saveImageBtn" class="btn btn-primary">حفظ الصورة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Input for Backup/Restore -->
+    <input type="file" id="backupFileInput" accept=".json" style="display: none;">
+
+    <script src="admin-script.js"></script>
+</body>
+
+</html>

@@ -252,3 +252,61 @@ const debouncedScrollHandler = debounce(() => {
 }, 10);
 
 window.addEventListener('scroll', debouncedScrollHandler);
+
+// Load images from admin panel
+function loadGalleryImages() {
+    const savedData = localStorage.getItem('tailoringData');
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            updateGalleryImages(data.menImages, data.womenImages);
+        } catch (e) {
+            console.error('Error loading gallery images:', e);
+        }
+    }
+}
+
+function updateGalleryImages(menImages, womenImages) {
+    // Update men's gallery
+    const menGalleryItems = document.querySelectorAll('#menImagesGrid .gallery-item, .men-services .gallery-item');
+    menGalleryItems.forEach((item, index) => {
+        if (menImages && menImages[index]) {
+            const image = menImages[index];
+            const placeholder = item.querySelector('.gallery-placeholder');
+            if (placeholder) {
+                placeholder.innerHTML = `
+                    <img src="${image.image}" alt="${image.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 10px;">
+                        <h4 style="margin: 0; font-size: 1rem;">${image.title}</h4>
+                        ${image.price ? `<p style="margin: 5px 0 0 0; font-size: 0.9rem;">${image.price}</p>` : ''}
+                    </div>
+                `;
+                placeholder.style.position = 'relative';
+            }
+        }
+    });
+
+    // Update women's gallery
+    const womenGalleryItems = document.querySelectorAll('#womenImagesGrid .gallery-item, .women-services .gallery-item');
+    womenGalleryItems.forEach((item, index) => {
+        if (womenImages && womenImages[index]) {
+            const image = womenImages[index];
+            const placeholder = item.querySelector('.gallery-placeholder');
+            if (placeholder) {
+                placeholder.innerHTML = `
+                    <img src="${image.image}" alt="${image.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 10px;">
+                        <h4 style="margin: 0; font-size: 1rem;">${image.title}</h4>
+                        ${image.price ? `<p style="margin: 5px 0 0 0; font-size: 0.9rem;">${image.price}</p>` : ''}
+                    </div>
+                `;
+                placeholder.style.position = 'relative';
+            }
+        }
+    });
+}
+
+// Load gallery images on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadGalleryImages();
+});
