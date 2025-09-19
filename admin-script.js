@@ -501,24 +501,24 @@ async function saveData() {
     // حفظ محلي
     localStorage.setItem('tailoringData', JSON.stringify(data));
 
-    // مزامنة سحابية
+    // مزامنة محلية
     if (window.cloudSync && cloudSyncEnabled) {
         try {
             const syncResult = await window.cloudSync.forceSync();
             if (syncResult) {
-                showMessage('✅ تم حفظ البيانات ومزامنتها عبر الإنترنت', 'success');
+                showMessage('✅ تم حفظ البيانات ومزامنتها مع جميع التبويبات', 'success');
                 updateCloudSyncStatus(true);
             } else {
-                showMessage('⚠️ تم حفظ البيانات محلياً فقط (لا يوجد اتصال)', 'warning');
+                showMessage('⚠️ تم حفظ البيانات محلياً فقط', 'warning');
                 updateCloudSyncStatus(false);
             }
         } catch (error) {
-            console.error('خطأ في المزامنة السحابية:', error);
+            console.error('خطأ في المزامنة المحلية:', error);
             showMessage('⚠️ تم حفظ البيانات محلياً فقط', 'warning');
             updateCloudSyncStatus(false);
         }
     } else if (cloudSyncEnabled) {
-        showMessage('💾 تم حفظ البيانات محلياً (المزامنة السحابية غير متاحة)', 'info');
+        showMessage('💾 تم حفظ البيانات محلياً (المزامنة غير متاحة)', 'info');
         updateCloudSyncStatus(false);
     } else {
         showMessage('💾 تم حفظ البيانات محلياً', 'info');
@@ -551,14 +551,11 @@ async function saveData() {
 function updateCloudSyncStatus(isOnline) {
     const statusElement = document.getElementById('cloudSyncStatus');
     if (statusElement) {
-        if (isOnline && cloudSyncEnabled) {
-            statusElement.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> متصل بالإنترنت';
+        if (cloudSyncEnabled) {
+            statusElement.innerHTML = '<i class="fas fa-sync-alt"></i> مزامنة محلية نشطة';
             statusElement.className = 'status-online';
-        } else if (isOnline && !cloudSyncEnabled) {
-            statusElement.innerHTML = '<i class="fas fa-cloud-slash"></i> غير مفعل';
-            statusElement.className = 'status-offline';
         } else {
-            statusElement.innerHTML = '<i class="fas fa-wifi"></i> غير متصل';
+            statusElement.innerHTML = '<i class="fas fa-pause"></i> مزامنة معطلة';
             statusElement.className = 'status-offline';
         }
     }
@@ -575,13 +572,13 @@ function toggleCloudSync() {
         }
 
         if (cloudSyncEnabled) {
-            showMessage('✅ تم تفعيل المزامنة السحابية', 'success');
+            showMessage('✅ تم تفعيل المزامنة المحلية - التغييرات ستظهر على جميع التبويبات', 'success');
             // محاولة مزامنة فورية
             setTimeout(() => {
                 window.cloudSync.forceSync();
             }, 1000);
         } else {
-            showMessage('⚠️ تم إيقاف المزامنة السحابية', 'warning');
+            showMessage('⚠️ تم إيقاف المزامنة المحلية', 'warning');
         }
     } else {
         showMessage('❌ نظام المزامنة غير متاح', 'error');
