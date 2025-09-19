@@ -501,27 +501,28 @@ async function saveData() {
     // حفظ محلي
     localStorage.setItem('tailoringData', JSON.stringify(data));
 
-    // مزامنة محلية
+    // مزامنة سحابية
     if (window.cloudSync && cloudSyncEnabled) {
         try {
+            console.log('🔄 بدء المزامنة السحابية...');
             const syncResult = await window.cloudSync.forceSync();
             if (syncResult) {
-                showMessage('✅ تم حفظ البيانات ومزامنتها مع جميع التبويبات', 'success');
+                showMessage('✅ تم حفظ البيانات ومزامنتها عبر الإنترنت مع جميع الأجهزة', 'success');
                 updateCloudSyncStatus(true);
             } else {
-                showMessage('⚠️ تم حفظ البيانات محلياً فقط', 'warning');
+                showMessage('⚠️ تم حفظ البيانات محلياً فقط (فشل المزامنة السحابية)', 'warning');
                 updateCloudSyncStatus(false);
             }
         } catch (error) {
-            console.error('خطأ في المزامنة المحلية:', error);
-            showMessage('⚠️ تم حفظ البيانات محلياً فقط', 'warning');
+            console.error('❌ خطأ في المزامنة السحابية:', error);
+            showMessage('⚠️ تم حفظ البيانات محلياً فقط (خطأ في المزامنة)', 'warning');
             updateCloudSyncStatus(false);
         }
     } else if (cloudSyncEnabled) {
-        showMessage('💾 تم حفظ البيانات محلياً (المزامنة غير متاحة)', 'info');
+        showMessage('💾 تم حفظ البيانات محلياً (نظام المزامنة غير متاح)', 'info');
         updateCloudSyncStatus(false);
     } else {
-        showMessage('💾 تم حفظ البيانات محلياً', 'info');
+        showMessage('💾 تم حفظ البيانات محلياً (المزامنة السحابية معطلة)', 'info');
         updateCloudSyncStatus(false);
     }
 
